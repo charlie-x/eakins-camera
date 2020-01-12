@@ -9,6 +9,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <getopt.h>
 
 enum {
 	CAM_NONE = 0,
@@ -37,7 +38,6 @@ enum {
 
 } camCommands;
 
-//#define SOCK_CLOEXEC 02000000UL
 
 int main(int argc, char *argv[])
 {
@@ -166,13 +166,21 @@ int main(int argc, char *argv[])
 			break;
 	}
 
-	// add error handling..
 	struct sockaddr_un tolog;
 	int sock = socket(AF_LOCAL, SOCK_STREAM|SOCK_CLOEXEC, 0);
+	if (sock == -1) {
+		return  -1;
+	}
+
 	tolog.sun_family = AF_UNIX;
+	
 	tolog.sun_path[0] = 0;
 	strcpy(tolog.sun_path, "/tmp/UNIX.domain");
-	connect(sock, (struct sockaddr*)&tolog, sizeof(struct sockaddr_un));
+
+	int ret =c onnect(sock, (struct sockaddr*)&tolog, sizeof(struct sockaddr_un));
+	if (ret == -1) {
+		return -1;
+	}
 
 	switch (command) {
 
@@ -292,6 +300,11 @@ int main(int argc, char *argv[])
 }
 
 
+
+/*
+	Example for Focus Stack capture
+		for var in `seq 0 70`; do ./talk p $var;  ./talk C; sleep 1; done
+*/
 
 
 
