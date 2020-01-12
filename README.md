@@ -17,5 +17,5 @@ There is an internal serial port which you'd need to attach too, this gives you 
  
  O – GND, the square pad I’d usually expect to see as ground, ,but there we go.
  
-The serial setup is 115200, 8N1 serial. Once the mod is done you can just print to serial the command and the camera will do it
+The serial setup is 3.3V 115200, 8N1 serial. Once the mod is done you can just print to serial the command and the camera will do it
  
