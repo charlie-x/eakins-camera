@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # This function generates G-code strings that scan in the X direction by a specified step size,
 # then step in the Y direction by its specified step size, repeating this process until the specified extents are reached.
 # After each echo, it sleeps for the specified duration and then calls ./focus_stack with the additional argument.
@@ -32,6 +34,19 @@ generateGCode() {
             fi
             echo focus stack $focusStackArg
             ./focus_stack 0 100 $focusStackArg
+
+            # Get today's date in the format YYYY-M-D without leading zeros
+            today_date=$(date +"%Y-%m-%d" | awk -F- '{print $1"-"$2+0"-"$3+0}')
+
+            # Create the target folder path
+            target_folder="scan/${x}_${y}/"
+
+            # Move JPG files from today's date folder to the target folder
+            if [ -d "$today_date" ]; then
+                mkdir -p "$target_folder"
+                mv "$today_date"/*.jpg "$target_folder"
+            fi
+
             x=$((x + xStepSize))
         done
         y=$((y + yStepSize))
@@ -56,4 +71,3 @@ echo >/dev/ttyUSB0 G0X0Y0F1
 sleep 10
 # Call the function with the provided arguments
 generateGCode "$1" "$2" "$3" "$4" "$5" "$6"
-
