@@ -1,0 +1,59 @@
+# This function generates G-code strings that scan in the X direction by a specified step size,
+# then step in the Y direction by its specified step size, repeating this process until the specified extents are reached.
+# After each echo, it sleeps for the specified duration and then calls ./focus_stack with the additional argument.
+#
+# @param xExtent The maximum extent for the X direction.
+# @param yExtent The maximum extent for the Y direction.
+# @param xStepSize The step size for the X direction.
+# @param yStepSize The step size for the Y direction.
+# @param sleepDuration The duration to sleep after each echo, defaults to 1 second if not provided.
+# @param focusStackArg The argument to pass to the ./focus_stack script.
+generateGCode() {
+    local xExtent=$1
+    local yExtent=$2
+    local xStepSize=$3
+    local yStepSize=$4
+    local sleepDuration=${5:-1}
+    local focusStackArg="$6"
+    local x=0
+    local y=0
+
+    while [[ $y -le $yExtent ]]; do
+        while [[ $x -le $xExtent ]]; do
+            echo move
+            ./talk p 0
+            echo >/dev/ttyUSB0 "G0X${x}Y${y}F1"
+            if [[ $x -eq 0 && $y -ne 0 ]]; then
+                echo wait 10
+                sleep 10
+            else
+                echo wait $sleepDuration
+                sleep $sleepDuration
+            fi
+            echo focus stack $focusStackArg
+            ./focus_stack 0 100 $focusStackArg
+            x=$((x + xStepSize))
+        done
+        y=$((y + yStepSize))
+        x=0
+    done
+}
+
+# Check if all required arguments are provided
+if [ $# -ne 6 ]; then
+    echo "Usage: $0 <xExtent> <yExtent> <xStepSize> <yStepSize> <sleepDuration> <focusStackArg>"
+    exit 1
+fi
+
+# Set to manual focus
+./talk m
+# Move to start focus position
+./talk p 0
+
+# Go home
+echo >/dev/ttyUSB0 G0X0Y0F1
+# Wait for home
+sleep 10
+# Call the function with the provided arguments
+generateGCode "$1" "$2" "$3" "$4" "$5" "$6"
+

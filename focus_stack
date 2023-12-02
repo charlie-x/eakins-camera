@@ -1,0 +1,23 @@
+
+# Script to iterate with step increments
+# Usage: ./script.sh <from> <to> <step_increment>
+
+# Check if three command-line arguments are provided
+if [ $# -ne 3 ]; then
+    echo "Usage: $0 <from> <to> <step_increment>"
+        exit 1
+        fi
+        
+        # Extract the "from," "to," and "step_increment" values from the command line arguments
+        from=$1
+        to=$2
+        step_increment=$3
+
+	echo from $from to  $to in $3        
+        # Loop through the range with step increments
+        for var in $(seq $from $step_increment $to); do
+            ./talk p $var
+                ./talk C
+                    sleep 1
+                    done
+                    
