@@ -1,3 +1,7 @@
+Koefen has done some work on the newer cameras 
+
+https://github.com/Kofen/eakins-camera
+
 # eakins-camera
 
 controlling the eakins microscope camera via sockets
