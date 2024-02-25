@@ -23,3 +23,4 @@ There is an internal serial port which you'd need to attach too, this gives you 
  
 The serial setup is 3.3V 115200, 8N1 serial. Once the mod is done you can just print to serial the command and the camera will do it
  
+![Alt](https://repobeats.axiom.co/api/embed/ddab9d8a2584bd055bde4cee54f10643dc6be75b.svg "Repobeats analytics image")
